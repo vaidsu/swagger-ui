@@ -19,7 +19,8 @@
     "prejshint": "gulp",
     "jshint": "jshint .",
     "pretest": "npm run jshint",
-    "test": "mocha"
+    "test": "mocha",
+    "clean": "gulp clean"
   },
   "repository": {
     "type": "git",
@@ -63,6 +64,8 @@
     "run-sequence": "^1.2.2",
     "selenium-webdriver": "^2.45.0",
     "sinon-chai": "2.8.0",
-    "swagger-client": "2.1.32"
+    "swagger-client": "2.1.32",
+    "base-64": "^0.1.0",
+    "utf8": "^2.1.2"
   }
 }

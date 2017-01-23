@@ -29,6 +29,16 @@ window.SwaggerUi = Backbone.Router.extend({
       delete options.dom_id;
     }
 
+    // Add auth-endpoint (can be used as basic auth endpoint)
+    if (options.auth_ep) {
+      this.auth_ep = options.auth_ep;
+      if (options.auth_pass_base64) {
+        this.auth_pass_base64 = options.auth_pass_base64;
+        delete options.auth_pass_base64;
+      }
+      delete options.auth_ep;
+    }
+
     if (!options.supportedSubmitMethods){
       options.supportedSubmitMethods = [
         'get',

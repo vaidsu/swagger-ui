@@ -54,6 +54,8 @@ function _dist() {
   return es.merge(
     gulp.src([
         './node_modules/es5-shim/es5-shim.js',
+        './node_modules/utf8/utf8.js',
+        './node_modules/base-64/base64.js',
         './lib/sanitize-html.min.js',
         './src/main/javascript/**/*.js',
         './node_modules/swagger-client/browser/swagger-client.js'
@@ -105,7 +107,9 @@ function _copy() {
   // copy JavaScript files inside lib folder
   gulp
     .src(['./lib/**/*.{js,map}',
-        './node_modules/es5-shim/es5-shim.js'
+        './node_modules/es5-shim/es5-shim.js',
+        './node_modules/utf8/utf8.js',
+        './node_modules/base-64/base64.js'
     ])
     .pipe(gulp.dest('./dist/lib'))
     .on('error', log);

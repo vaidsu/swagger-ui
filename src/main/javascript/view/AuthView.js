@@ -7,6 +7,8 @@
 /* global clientSecret */
 /* global onOAuthComplete */
 /* global realm */
+/* global utf8 */
+/* global base64 */
 /*jshint unused:false*/
 
 SwaggerUi.Views.AuthView = Backbone.View.extend({
@@ -70,8 +72,34 @@ SwaggerUi.Views.AuthView = Backbone.View.extend({
 
                 this.router.api.clientAuthorizations.add(auth.get('title'), keyAuth);
             } else if (type === 'basic') {
-                basicAuth = new SwaggerClient.PasswordAuthorization(auth.get('username'), auth.get('password'));
-                this.router.api.clientAuthorizations.add(auth.get('title'), basicAuth);
+                // basicAuth = new SwaggerClient.PasswordAuthorization(auth.get('username'), auth.get('password'));
+                // this.router.api.clientAuthorizations.add(auth.get('title'), basicAuth);
+                // The tweak is to re-use basic authentication and send a POST to the required URL.
+                var pass = auth.get('password');
+                if (this.router.auth_pass_base64) {
+                    pass = base64.encode(utf8.encode(auth.get('password')));
+                }
+                var data = {
+                    'username': auth.get('username'),
+                    'password': pass
+                };
+                if (this.router.auth_ep) {
+                    $.ajax({
+                        url: this.router.auth_ep,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (data) {
+                            var apic = new SwaggerClient.ApiKeyAuthorization('Authorization', 'Bearer ' + data.data.token, 'header');
+                            this.router.api.clientAuthorizations.add(auth.get('title'), apic);
+                        }.bind(this),
+                        error: function () {
+                            console.log('Failed authentication');
+                        }
+                    })
+                    ;
+                }
             } else if (type === 'oauth2') {
                 this.handleOauth2Login(auth);
             }
